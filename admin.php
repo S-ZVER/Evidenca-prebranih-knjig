@@ -32,10 +32,18 @@ $users_result = mysqli_query($conn, $users_query);
 // Obdelamo brisanje knjige
 if (isset($_POST['delete_book']) && isset($_POST['confirm_delete'])) {
     $book_id = $_POST['book_id'];
-    if (mysqli_query($conn, "DELETE FROM books WHERE books_id = $book_id")) {
-        $success = 'Knjiga je bila uspešno izbrisana';
+    
+    // First delete related records in users_books_status
+    $delete_status_query = "DELETE FROM users_books_status WHERE books_id = $book_id";
+    if (mysqli_query($conn, $delete_status_query)) {
+        // Then delete the book
+        if (mysqli_query($conn, "DELETE FROM books WHERE books_id = $book_id")) {
+            $success = 'Knjiga je bila uspešno izbrisana';
+        } else {
+            $error = 'Napaka pri brisanju knjige';
+        }
     } else {
-        $error = 'Napaka pri brisanju knjige';
+        $error = 'Napaka pri brisanju povezanih zapisov';
     }
 }
 
