@@ -33,7 +33,7 @@ $users_result = mysqli_query($conn, $users_query);
 if (isset($_POST['delete_book']) && isset($_POST['confirm_delete'])) {
     $book_id = $_POST['book_id'];
     
-    // First delete related records in users_books_status
+    //najprej izbrišemo relacije (tuje ključe )iz vmesne tabele users_books_status
     $delete_status_query = "DELETE FROM users_books_status WHERE books_id = $book_id";
     if (mysqli_query($conn, $delete_status_query)) {
         // Then delete the book
